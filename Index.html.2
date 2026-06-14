@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1 id="multi">1.00x</h1>
+<button onclick="cashOut()">Cash Out</button>
+
+<script>
+let multiplier = 1;
+let crashPoint = (Math.random() * 8 + 2).toFixed(2);
+let running = true;
+
+let game = setInterval(() => {
+  if (!running) return;
+
+  multiplier += 0.05;
+  document.getElementById("multi").innerText =
+    multiplier.toFixed(2) + "x";
+
+  if (multiplier >= crashPoint) {
+    running = false;
+    clearInterval(game);
+    document.getElementById("multi").innerText =
+      "CRASH! (" + crashPoint + "x)";
+  }
+}, 100);
+
+function cashOut() {
+  if (running) {
+    running = false;
+    clearInterval(game);
+    alert("Cashed out at " + multiplier.toFixed(2) + "x");
+  }
+}
+</script>
+</body>
+</html>
