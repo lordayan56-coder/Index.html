@@ -1,36 +1,90 @@
 <!DOCTYPE html>
 <html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crash Game Demo</title>
+<style>
+body{
+  margin:0;
+  background:#111827;
+  color:white;
+  font-family:Arial,sans-serif;
+  text-align:center;
+}
+.header{
+  padding:15px;
+  font-size:28px;
+  font-weight:bold;
+}
+#balance{
+  margin:10px;
+  font-size:20px;
+}
+#multiplier{
+  font-size:60px;
+  margin:20px;
+}
+#status{
+  font-size:24px;
+}
+button{
+  padding:12px 25px;
+  font-size:18px;
+  border:none;
+  border-radius:10px;
+}
+</style>
+</head>
 <body>
-<h1 id="multi">1.00x</h1>
+
+<div class="header">✈ Crash Demo</div>
+<div id="balance">Demo Balance: 1000</div>
+<div id="multiplier">1.00x</div>
+<div id="status">Waiting...</div>
 <button onclick="cashOut()">Cash Out</button>
 
 <script>
-let multiplier = 1;
-let crashPoint = (Math.random() * 8 + 2).toFixed(2);
-let running = true;
+let running=false;
+let multiplier=1;
+let game;
 
-let game = setInterval(() => {
-  if (!running) return;
+function startGame(){
+  multiplier=1;
+  running=true;
+  let crash=(Math.random()*8)+2;
 
-  multiplier += 0.05;
-  document.getElementById("multi").innerText =
-    multiplier.toFixed(2) + "x";
+  document.getElementById("status").innerHTML="Running";
 
-  if (multiplier >= crashPoint) {
-    running = false;
+  game=setInterval(()=>{
+    multiplier+=0.03;
+    document.getElementById("multiplier").innerHTML=
+      multiplier.toFixed(2)+"x";
+
+    if(multiplier>=crash){
+      clearInterval(game);
+      running=false;
+      document.getElementById("status").innerHTML=
+        "💥 CRASH at "+crash.toFixed(2)+"x";
+
+      setTimeout(startGame,3000);
+    }
+  },100);
+}
+
+function cashOut(){
+  if(running){
     clearInterval(game);
-    document.getElementById("multi").innerText =
-      "CRASH! (" + crashPoint + "x)";
-  }
-}, 100);
+    running=false;
+    document.getElementById("status").innerHTML=
+      "✅ Cashed Out at "+multiplier.toFixed(2)+"x";
 
-function cashOut() {
-  if (running) {
-    running = false;
-    clearInterval(game);
-    alert("Cashed out at " + multiplier.toFixed(2) + "x");
+    setTimeout(startGame,3000);
   }
 }
+
+startGame();
 </script>
+
 </body>
 </html>
